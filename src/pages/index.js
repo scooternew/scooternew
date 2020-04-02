@@ -13,8 +13,7 @@ const IndexPage = () => (
         in building highly concurrent Android applications with a focus on speech recognition, location acquisition,
         and user context.
     </p>
-    <p>Something about accessibility research and YouTube Music.</p>
-    <p>I'm also a jazz pianist and music producer. I started playing piano when I was five years old.</p>
+    <p>More to come soon. Stay tuned!</p>
     <div style={{ maxWidth: `500px`, marginBottom: `1.45rem`, margin: `0 auto`}}>
       <Image />
     </div>
