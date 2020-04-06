@@ -76,12 +76,16 @@ mark {
   background-color: #ff0;
   color: #000;
 }
+#header-container {
+  padding: 1.45rem 0;
+}
 .navbar {
-  margin-left: auto;
   margin-top: auto;
-  padding: 1.45rem 1.0875rem;
   font-family: 'Acme', sans-serif;
   font-size: 1.15em;
+}
+.navitems {
+  margin-left: 0;
 }
 .navitems > a {
   padding-right: 20px;
@@ -649,8 +653,12 @@ pre tt:before,
 pre tt:after {
   content: "";
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 800px) {
   html {
     font-size: 100%;
+  }
+  header {
+    flex-direction: column;
+    justify-content: space-around;
   }
 }
