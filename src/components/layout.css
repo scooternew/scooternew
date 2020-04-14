@@ -1,10 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Acme&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@300;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Jaldi&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Gafata&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Arvo:400,700&display=swap');
 
 html {
   font-family: sans-serif;
@@ -76,30 +72,31 @@ mark {
   background-color: #ff0;
   color: #000;
 }
-#header-container {
+#header-main-content {
   padding: 1.45rem 0;
 }
 .navbar {
   margin-top: auto;
-  font-family: 'Acme', sans-serif;
-  font-size: 1.15em;
+  font-family: 'Arvo', serif;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 .navitems {
   margin-left: 0;
 }
 .navitems > a {
   padding-right: 20px;
-  color: lightgrey;
-  transition: all .12s ease-out;
-  -o-transition: all .12s ease-out;
-  -moz-transition: all .12s ease-out;
-  -webkit-transition: all .12s ease-out;
+  color: #EDFFEC;
+  transition: all .08s ease-out;
+  -o-transition: all .08s ease-out;
+  -moz-transition: all .08s ease-out;
+  -webkit-transition: all .08s ease-out;
 }
 .navitems > a:last-child {
   padding-right: 0;
 }
 .navitems > a:hover {
-  color: purple;
+  color: #24efa5;
 }
 small {
   font-size: 80%;
@@ -232,9 +229,8 @@ html {
   box-sizing: inherit;
 }
 body {
-  /* color: hsla(0, 0%, 0%, 0.8); */
-  color: #0C0910;
-  background-color: #afbfc0;
+  color: #443E49; /* Arsenic */
+  background-color: #C6CECD;
   font-family: 'Alegreya Sans', sans-serif;
   font-weight: normal;
   word-wrap: break-word;
@@ -264,9 +260,8 @@ h1 {
   padding-right: 0;
   padding-top: 0;
   margin-bottom: 1.45rem;
-  /* color: inherit; */;
-  color: #1E1014;
-  font-family: 'Acme', sans-serif;
+  color: #C8E5C5;
+  font-family: 'Arvo', serif;
   font-weight: bold;
   text-rendering: optimizeLegibility;
   font-size: 5rem;
@@ -287,6 +282,7 @@ h2 {
   text-rendering: optimizeLegibility;
   font-size: 1.62671rem;
   line-height: 1.1;
+  color: #443E49;
 }
 h3 {
   margin-left: 0;
@@ -660,5 +656,8 @@ pre tt:after {
   header {
     flex-direction: column;
     justify-content: space-around;
+  }
+  h1 {
+    font-size: 4.5rem;
   }
 }

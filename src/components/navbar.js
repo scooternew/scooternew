@@ -9,7 +9,7 @@ const Navbar = () => {
         <ul className="navitems">
           <Link to="/projects">Projects</Link>
           <Link to="/blog">Blog</Link>
-          <a href={`ScottNewman-Resume.pdf`} download>Resume</a>
+          <a href={`ScottNewman-Resume.pdf`} download>R&eacute;sum&eacute;</a>
           <Link to="/contact">Contact</Link>
         </ul>
       </div>
