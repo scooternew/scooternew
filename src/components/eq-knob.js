@@ -7,9 +7,8 @@ export default class EqKnob extends React.Component {
     current: 20,
   }
   
-  handleUpdateSlider = (event) => {
-    const value = event.target.value;
-    this.props.onUpdateFilter(value);
+  handleChangeFrequency = (event) => {
+    this.props.onChangeFrequency(event.target.value);
   }
 
   render() {
@@ -19,7 +18,7 @@ export default class EqKnob extends React.Component {
             step="1"
             min={this.min}
             max={this.max}
-            onChange={this.handleUpdateSlider} />
+            onChange={this.handleChangeFrequency} />
     )
   }
 }

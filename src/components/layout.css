@@ -661,3 +661,8 @@ pre tt:after {
     font-size: 4.5rem;
   }
 }
+#file-dragger {
+  min-width: 300px;
+  min-height: 20px;
+  border: 5px solid black;
+}
