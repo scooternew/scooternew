@@ -8,6 +8,9 @@ export default class AudioPlayer extends React.Component {
   constructor(props) {
     super(props);
 
+    // Set up audio context to be supported cross-browser
+    //window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
     // Refs for connecting all the filters together.
     // TODO(newmans): Figure out how to connect them all programmatically.
     // The end goal should be, define the chain in HTML within a div, and
@@ -26,7 +29,7 @@ export default class AudioPlayer extends React.Component {
 
     // React state
     this.state = {
-      audioContext: new AudioContext(),
+      audioContext: null,
       audioSource: null,
       displayFilePath: "Default song.mp3"
     }
@@ -37,42 +40,45 @@ export default class AudioPlayer extends React.Component {
     //this.makePlaybackStatus = this.makePlaybackStatus.bind(this); // TODO(newmans): Better understand this.
   }
 
+  componentDidMount() {
+    var ctx = new AudioContext();
+    this.setState({audioContext: ctx});
+    console.log("AudioPlayer mounted.");
+  }
+
   decodeAudio(file) {
-    if (this.state.audioContext != null) {
-      console.log('About to decode file for audio playback: ' + file);
-      var audioCtx = this.state.audioContext; 
-      audioCtx.decodeAudioData(
-          file,
-          (buffer) => {
-            // Stop any previous playback
-            if (this.state.audioSource != null) {
-              console.log("Stopping currently playing audio");
-              this.state.audioSource.stop();
-            }
+    console.log('About to decode file for audio playback: ' + file);
+    var audioCtx = this.state.audioContext;
+    audioCtx.decodeAudioData(
+        file,
+        (buffer) => {
+          // Stop any previous playback
+          if (this.state.audioSource != null) {
+            console.log("Stopping currently playing audio");
+            this.state.audioSource.stop();
+          }
 
-            // Create new audio source (file from the drag and drop area)
-            var source = audioCtx.createBufferSource();
-            this.setState({audioSource: source});
+          // Create new audio source (file from the drag and drop area)
+          var source = audioCtx.createBufferSource();
+          this.setState({audioSource: source});
 
-            // Basic params
-            source.loop = true; 
-            source.buffer = buffer;
+          // Basic params
+          source.loop = true; 
+          source.buffer = buffer;
 
-            // Connects the source to all the filters to the destination (speakers)
-            this.buildFilterChain();
+          // Connects the source to all the filters to the destination (speakers)
+          this.buildFilterChain();
 
-            // start playing from buffer at position 0
-            source.start(0);
+          // start playing from buffer at position 0
+          source.start(0);
 
-            console.log("Playback started");
-            this.startedPlayback = true; // update playback state
-         },
-         (e) => {
-           console.log("Error decoding audio: " + e);
-         }
-      );
-    }
-
+          console.log("Playback started");
+          this.startedPlayback = true; // update playback state
+       },
+       (e) => {
+         console.log("Error decoding audio: " + e);
+       }
+    );
   }
 
   startPlayback = () => {

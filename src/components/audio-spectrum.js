@@ -6,15 +6,17 @@ export default class AudioSpectrum extends React.Component {
 
       // TODO(newmans): Move to componentDidMount.
       this.analyzer = null;
-      this.setupAnalyzer();
 
       this.state = {
         frequencyDomain: true
       }
     }
 
-    componentDidMount() {
-      this.drawSpectrum();
+    componentDidUpdate() {
+      if (this.analyzer === null && this.props.audioContext != null) {
+        this.setupAnalyzer();
+        this.drawSpectrum();
+      }
     }
 
     getFilter = () => {
@@ -23,14 +25,12 @@ export default class AudioSpectrum extends React.Component {
 
     setupAnalyzer = () => {
       console.log("Generating audio spectrum analyzer (for visualization)");
-      if (this.analyzer === null) {
-        this.analyzer = this.props.audioContext.createAnalyser(); 
+      this.analyzer = this.props.audioContext.createAnalyser(); 
        
-        // Params
-        this.analyzer.fftSize = 4096;
+      // Params
+      this.analyzer.fftSize = 4096;
 
-        this.signalBuffer = new Uint8Array(this.analyzer.frequencyBinCount);
-      }
+      this.signalBuffer = new Uint8Array(this.analyzer.frequencyBinCount);
     }
 
     drawSpectrum = () => {

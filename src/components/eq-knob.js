@@ -8,13 +8,16 @@ export default class SimpleEqKnob extends React.Component {
   constructor(props) {
     super(props);
 
+    this.baseFilter = null;
+
     this.state = {
       frequency: this.computeDefaultValue(),
       q: 0
     }
+  }
 
-    this.baseFilter = null;
-    if (this.props.audioContext != null) {
+  componentDidUpdate() {
+    if (this.baseFilter === null && this.props.audioContext != null) {
       console.log("Generating EQ knob: [type=" + this.props.type + ", min=" + this.props.min + ", max=" + this.props.max+"]");
       this.baseFilter = this.props.audioContext.createBiquadFilter();
       this.baseFilter.type = this.props.type;
