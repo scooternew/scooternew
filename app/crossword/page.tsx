@@ -1,7 +1,5 @@
-import Grid from './Grid';
+import Grid from "./Grid"
 
 export default function Crossword() {
-    return (
-        <Grid />
-    )
+  return <Grid />
 }
