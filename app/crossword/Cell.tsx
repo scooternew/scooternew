@@ -29,14 +29,18 @@
 
 interface CellProps {
   selected: boolean
+  widthPercent: string
+  paddingBottomPercent: string
 }
 
 export default function Cell(props: CellProps) {
+  // Width and PaddingBottom are the grid width / row length, grid height / row height
   return (
     <div
+      onKeyDown={(e) => console.log(e)}
       style={{
-        width: "10%",
-        paddingBottom: "10%",
+        width: props.widthPercent,
+        paddingBottom: props.paddingBottomPercent,
         borderTop: "1px solid gray",
         borderRight: "1px solid gray",
         lineHeight: "1.5",
