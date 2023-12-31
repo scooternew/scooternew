@@ -89,7 +89,8 @@ export default function Grid() {
       className="grid"
       onKeyDown={handleKeyDown}
       style={{
-        display: "block",
+        display: "table-cell", // TODO(scooternew): should be "block" or "inline-block"
+        border: "5px solid black",
         width: gridSizePx,
         height: gridSizePx,
         backgroundColor: "gray",
