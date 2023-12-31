@@ -1,57 +1,62 @@
-// interface CellProps {
-//     barRight: boolean;
-//     barBottom: boolean;
-//     hidden: boolean;
-//     hiddenRight: boolean;
-//     hiddenBottom: boolean;
-//     isEnteringRebus: boolean;
-//     rebusValue?: string;
-//     autofill: string;
-//     gridWidth: number;
-//     gridHeight: number;
-//     isBlock: boolean;
-//     active: boolean;
-//     entryCell: boolean;
-//     refedCell: boolean;
-//     highlightCell: boolean;
-//     highlight: 'circle' | 'shade' | undefined;
-//     value: string;
-//     number: string;
-//     row: number;
-//     column: number;
-//     onClick: (pos: { row: number; col: number }) => void;
-//     isVerified: boolean | undefined;
-//     isWrong: boolean | undefined;
-//     wasRevealed: boolean | undefined;
-//     cellColor?: number;
-//     isOpposite: boolean;
-//   }
+import { useState } from "react"
 
 interface CellProps {
   selected: boolean
   widthPercent: string
   paddingBottomPercent: string
+  rowIndex: number
+  columnIndex: number
+  // TODO(scooternew): Store style data separately.
+  // styleProps: { number: number }
 }
 
+// TODO(scooternew): Set default props.
 export default function Cell(props: CellProps) {
-  // Width and PaddingBottom are the grid width / row length, grid height / row height
+  const [isBlock, setIsBlock] = useState(false)
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    console.log(event)
+    if (event.key === ".") {
+      console.log(
+        "Cell level event handler - period key was pressed on cell [" +
+          props.rowIndex +
+          ", " +
+          props.columnIndex
+      )
+      // setIsBlock(!isBlock)
+    }
+  }
+
+  const selectBackgroundColor = () => {
+    // if (isBlock) {
+    //   return "black"
+    // }
+    return props.selected ? "blue" : "white"
+  }
+
   return (
     <div
-      //   onKeyDown={(e) => console.log(e)}
+      onKeyDown={handleKeyDown}
       style={{
         width: props.widthPercent,
         paddingBottom: props.paddingBottomPercent,
         borderTop: "1px solid gray",
         borderRight: "1px solid gray",
         lineHeight: "1.5",
-        // paddingBottom: "100%",
         float: "left",
         position: "relative",
         margin: 0,
         overflow: "hidden",
         containerType: "size",
-        backgroundColor: props.selected ? "brown" : "white",
+        backgroundColor: selectBackgroundColor(),
+        color: "darkGray",
+        fontSize: "0.7em",
       }}
-    ></div>
+      tabIndex={0} // Ensures this can respond to key events.
+    >
+      <div className="internalCellText">
+        [{props.rowIndex}, {props.columnIndex}]
+      </div>
+    </div>
   )
 }

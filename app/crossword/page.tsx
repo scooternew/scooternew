@@ -1,7 +1,7 @@
 import Grid from "./Grid"
 
 export default function Crossword() {
-  //   console.log("Creating crossword window...")
+  console.log("Creating crossword window...")
   return (
     <div
       style={{
