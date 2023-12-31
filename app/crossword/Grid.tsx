@@ -14,31 +14,24 @@ export interface GridProps {
   // hBars: Set<number>;
 }
 
-function handleKeyPress(event: KeyboardEvent) {
+function handleKeyDown(event: React.KeyboardEvent) {
   console.log(event)
-  if (event.key === "Enter") {
-    console.log("Enter key was pressed!!")
+  if (event.key === "ArrowLeft") {
+    console.log("Left arrow was pressedg")
     // Perform an action when the Enter key is pressed
   }
 }
 
-function componentDidMount() {
-  console.log("I was triggered during componentDidMount")
-}
-
 export default function Grid() {
-  console.log("Grid is created!")
-  //   const [gridSize, setGridSize] = useState({ width: 15, height: 15 })
+  // TODO(scooternew): Document grid constraints.
   const gridSize = 10
-  const gridSizePx = 400 // TODO(scooternew): Document constraints.
+  const gridSizePx = 400
   const gridWidthPercent = 100 / gridSize + "%"
   const paddingBottomPercent = 100 / gridSize + "%"
 
   const cells = []
 
-  useEffect(() => document.addEventListener("keypress", handleKeyPress))
-
-  // TODO(scooternew): Default values / optional props.
+  // TODO(scooternew): Support default props.
   for (var i = 0; i < gridSize * gridSize; i++) {
     cells.push(
       <Cell
@@ -47,22 +40,24 @@ export default function Grid() {
           widthPercent: gridWidthPercent,
           paddingBottomPercent: paddingBottomPercent,
         }}
+        key={"cell" + i}
       />
     )
   }
 
+  // TODO(scooternew): Handle events at top-level and propagate downward.
+  // TODO(scooternew): Debounce events.
   return (
     <div
-      // TODO(scooternew): Correctly register and process key events.
-      // TODO(scooternew): Consider a general eventing system (e.g. eventbus, pub/sub, etc.).
-      // onKeyDown={(e) => console.log(e)}
       className="grid"
+      onKeyDown={handleKeyDown}
       style={{
         display: "block",
         width: gridSizePx,
         height: gridSizePx,
         backgroundColor: "gray",
       }}
+      tabIndex={-1} // Ensures this can respond to key events.
     >
       {...cells}
     </div>

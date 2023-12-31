@@ -1,7 +1,7 @@
 import Grid from "./Grid"
 
 export default function Crossword() {
-  console.log("Creating crossword window...")
+  //   console.log("Creating crossword window...")
   return (
     <div
       style={{
@@ -11,6 +11,7 @@ export default function Crossword() {
         height: "600px",
         backgroundColor: "gray",
       }}
+      tabIndex={-1}
     >
       <Grid />
       Grid size will be adjustable here.
