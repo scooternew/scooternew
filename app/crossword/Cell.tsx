@@ -37,7 +37,7 @@ export default function Cell(props: CellProps) {
   // Width and PaddingBottom are the grid width / row length, grid height / row height
   return (
     <div
-      onKeyDown={(e) => console.log(e)}
+      //   onKeyDown={(e) => console.log(e)}
       style={{
         width: props.widthPercent,
         paddingBottom: props.paddingBottomPercent,

@@ -14,7 +14,7 @@ export interface GridProps {
   // hBars: Set<number>;
 }
 
-function handleKeyDown(event: React.KeyboardEvent) {
+function handleKeyPress(event: KeyboardEvent) {
   console.log(event)
   if (event.key === "Enter") {
     console.log("Enter key was pressed!!")
@@ -36,6 +36,8 @@ export default function Grid() {
 
   const cells = []
 
+  useEffect(() => document.addEventListener("keypress", handleKeyPress))
+
   // TODO(scooternew): Default values / optional props.
   for (var i = 0; i < gridSize * gridSize; i++) {
     cells.push(
@@ -53,7 +55,7 @@ export default function Grid() {
     <div
       // TODO(scooternew): Correctly register and process key events.
       // TODO(scooternew): Consider a general eventing system (e.g. eventbus, pub/sub, etc.).
-      onKeyDown={(e) => console.log(e)}
+      // onKeyDown={(e) => console.log(e)}
       className="grid"
       style={{
         display: "block",
