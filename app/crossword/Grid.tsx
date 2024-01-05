@@ -16,6 +16,24 @@ export interface GridProps {
   // cells: string[]
 }
 
+const updateCellAt = (grid: Array<any>, index: number, newCell: any) => {
+  return [
+    // Items before the insertion point:
+    ...grid.slice(0, index),
+    // New item:
+    newCell,
+    // Items after the insertion point:
+    ...grid.slice(index),
+  ]
+}
+
+const convertToIndex = (position: Array<number>, gridSize: number): number => {
+  console.log("Position: " + position)
+  const index = position[0] + position[1] * gridSize
+  console.log("convertToIndex: " + index)
+  return index
+}
+
 export default function Grid() {
   // TODO(scooternew): Document grid constraints.
   const gridSize = 12
@@ -26,7 +44,7 @@ export default function Grid() {
   // TODO(scooternew): Externalize as global or top-level constants.
   const [cursorPosition, setCursorPosition] = useState([0, 0])
   const [direction, setDirection] = useState(Direction.Horizontal)
-  const [blockList, setBlockList] = useState({})
+  const [blockList, setBlockList] = useState(0)
   // TODO(scooternew): Model as map or 2d array.
 
   const cellsList = []
@@ -102,8 +120,13 @@ export default function Grid() {
     }
     if (event.key === ".") {
       console.log("Period key was pressed")
-      const map = { test: "Hello!" }
-      setBlockList(map)
+      // const map = { test: "Hello!"
+      const index = convertToIndex(cursorPosition, gridSize)
+      console.log("Flat index: " + index)
+      const component = grid[index] // vs const?
+      console.log(component)
+
+      setGrid((oldGrid) => updateCellAt(oldGrid, index, <div>HAHA</div>))
     }
   }
 
@@ -111,8 +134,8 @@ export default function Grid() {
     "Selected cell: [" + cursorPosition[0] + ", " + cursorPosition[1] + "]"
   )
 
-  console.log("CellsList: " + cellsList)
-  console.log("Grid: " + grid)
+  // console.log("CellsList: " + cellsList)
+  // console.log("Grid: " + grid)
   console.log("Blocklist: " + blockList)
 
   // TODO(scooternew): Handle events at top-level and propagate downward.
