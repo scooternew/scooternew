@@ -11,14 +11,13 @@ import React, {
 import Cell from "./Cell"
 
 import { ReactNode, useState, useEffect } from "react"
-import { GlobalGridContext, GlobalGridProps } from "./GlobalGridContext"
 
 enum Direction {
   Horizontal,
   Vertical,
 }
 
-interface GridProps {
+export interface GridProps {
   readonly gridLength: number
   readonly gridSizePx: number
   selectedCell: { row: number; col: number }
