@@ -9,6 +9,14 @@ interface CellProps {
 
 // TODO(scooternew): Set default props.
 export default function Cell(props: CellProps) {
+  const [isBlock, setIsBlock] = useState(false)
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    console.log(e)
+    if (e.key == "." && props.selected) {
+      setIsBlock(!isBlock)
+    }
+  }
+
   return (
     <div
       style={{
@@ -22,7 +30,11 @@ export default function Cell(props: CellProps) {
         margin: 0,
         overflow: "hidden",
         containerType: "size",
-        backgroundColor: props.selected ? "blue" : "white",
+        backgroundColor: isBlock
+          ? "darkgray"
+          : props.selected
+          ? "blue"
+          : "white",
         color: "darkGray",
         fontSize: "0.7em",
       }}

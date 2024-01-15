@@ -21,12 +21,14 @@ export interface GridProps {
   readonly gridLength: number
   readonly gridSizePx: number
   selectedCell: { row: number; col: number }
+  direction: Direction
 }
 
 const defaultGridState: GridProps = {
-  gridLength: 10,
-  gridSizePx: 500,
+  gridLength: 5,
+  gridSizePx: 400,
   selectedCell: { row: 0, col: 0 },
+  direction: Direction.Horizontal,
 }
 
 // Returns a 2D array of size length x length. Each element
@@ -54,46 +56,86 @@ const buildGridElements = (gridState: GridProps) => {
 }
 
 export default function Grid() {
-  // TODO(scooternew): Document grid constraints.
+  // TODO(scooternew): useContext for global state. How does this work?
   const [gridState, setGridState] = useState(defaultGridState)
 
-  const handleEvent = (e: React.KeyboardEvent<HTMLElement>) => {
-    console.log(e)
-    if ((e.key = "up")) {
-      setGridState((oldGridState) => {
-        let newGridState = oldGridState
-        newGridState.selectedCell = {
-          row: oldGridState.selectedCell.row,
+  // useCallback on this for memoization?
+  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key == "ArrowUp") {
+      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      setGridState({
+        ...gridState,
+        direction: Direction.Vertical,
+        selectedCell: {
+          row: gridState.selectedCell.row,
           col:
-            oldGridState.selectedCell.col == 0
+            gridState.selectedCell.col == 0
               ? gridState.gridLength - 1
               : gridState.selectedCell.col - 1,
-        }
-        return newGridState
+        },
+      })
+    }
+    if (e.key == "ArrowRight") {
+      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      setGridState({
+        ...gridState,
+        direction: Direction.Horizontal,
+        selectedCell: {
+          row:
+            gridState.selectedCell.row == gridState.gridLength - 1
+              ? 0
+              : gridState.selectedCell.row + 1,
+          col: gridState.selectedCell.col,
+        },
+      })
+    }
+    if (e.key == "ArrowLeft") {
+      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      setGridState({
+        ...gridState,
+        direction: Direction.Horizontal,
+        selectedCell: {
+          row:
+            gridState.selectedCell.row == 0
+              ? gridState.gridLength - 1
+              : gridState.selectedCell.row - 1,
+          col: gridState.selectedCell.col,
+        },
+      })
+    }
+    if (e.key == "ArrowDown") {
+      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      setGridState({
+        ...gridState,
+        direction: Direction.Vertical,
+        selectedCell: {
+          row: gridState.selectedCell.row,
+          col:
+            gridState.selectedCell.col == gridState.gridLength - 1
+              ? 0
+              : gridState.selectedCell.col + 1,
+        },
       })
     }
   }
 
-  const handleEventCallback = useCallback(handleEvent, [gridState])
-
   console.log("Grid state: " + JSON.stringify(gridState))
 
   return (
-    // <gridContext.Provider value={gridState}>
     <div
-      onKeyDown={handleEventCallback}
+      onKeyDown={handleKeyEvent}
       className="grid"
       style={{
         display: "table-cell",
         border: "5px solid black",
         width: gridState.gridSizePx,
         height: gridState.gridSizePx,
+        outline: "none", // Prevents border from displaying during focus.
         backgroundColor: "gray",
       }}
       tabIndex={-1}
     >
       {...buildGridElements(gridState)}
     </div>
-    // </gridContext.Provider>
   )
 }
