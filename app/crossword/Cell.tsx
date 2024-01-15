@@ -6,6 +6,7 @@ export interface CellProps {
   columnIndex: number
   sizePercent: string
   blocked: boolean
+  displayText: string
 }
 
 // TODO(scooternew): Set default props.
@@ -38,6 +39,18 @@ export default function Cell(props: CellProps) {
     >
       <div className="internalCellText">
         [{props.rowIndex}, {props.columnIndex}]
+        <br />
+        <span
+          style={{
+            display: "block",
+            textAlign: "center",
+            fontWeight: "bolder",
+            fontSize: "1.5em",
+            color: "#BBBBBB",
+          }}
+        >
+          {props.displayText}
+        </span>
       </div>
     </div>
   )

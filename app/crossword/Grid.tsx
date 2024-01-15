@@ -47,34 +47,11 @@ const buildInitialCellsList = (
         columnIndex: colIndex,
         sizePercent: percent,
         blocked: false,
+        displayText: "",
       }
     })
   })
 }
-
-// Returns a 2D array of size length x length. Each element
-// contains an object with the corresponding row and column index.
-// const buildGridElements = (gridState: GridProps) => {
-//   const percent = 100 / gridState.gridLength + "%"
-//   return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
-//     return colIndex
-//   }).map((colIndex) => {
-//     return Array.from({ length: gridState.gridLength }, (_, rowIndex) => {
-//       return (
-//         <Cell
-//           key={"cell-" + rowIndex + "-" + colIndex}
-//           selected={
-//             gridState.selectedCell.row == rowIndex &&
-//             gridState.selectedCell.col == colIndex
-//           }
-//           rowIndex={rowIndex}
-//           columnIndex={colIndex}
-//           sizePercent={percent}
-//         />
-//       )
-//     })
-//   })
-// }
 
 export default function Grid(props: { gridLength?: number }) {
   const [gridState, setGridState] = useState(
@@ -86,7 +63,31 @@ export default function Grid(props: { gridLength?: number }) {
   const [cellsList, setCellsList] = useState(buildInitialCellsList(gridState))
 
   const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    console.log(e)
+
     const oldPosition = gridState.selectedCell
+
+    if (e.keyCode >= 65 && e.keyCode <= 90) {
+      // Clean this up, it's hacky.
+      const cell = cellsList[oldPosition.col][oldPosition.row]
+      if (!cell.blocked && cell.selected) {
+        setCellsList((updatedCellsList) => {
+          updatedCellsList[oldPosition.col][oldPosition.row].displayText =
+            e.key.toUpperCase()
+          return updatedCellsList
+        })
+        setGridState({ ...gridState }) // Force a re-render. Why is this needed?
+      }
+    }
+    if (e.key == "Backspace") {
+      const cell = cellsList[oldPosition.col][oldPosition.row]
+      if (cell.selected)
+        setCellsList((updatedCellsList) => {
+          updatedCellsList[oldPosition.col][oldPosition.row].displayText = "" // Clear the text.
+          return updatedCellsList
+        })
+      setGridState({ ...gridState }) // Force a re-render. Why is this needed?
+    }
     if (e.key == "ArrowUp") {
       const newPosition = {
         row: gridState.selectedCell.row,
@@ -167,6 +168,7 @@ export default function Grid(props: { gridLength?: number }) {
       const oldBlocked = cellsList[oldPosition.col][oldPosition.row].blocked
       setCellsList((updatedCellsList) => {
         updatedCellsList[oldPosition.col][oldPosition.row].blocked = !oldBlocked
+        updatedCellsList[oldPosition.col][oldPosition.row].displayText = "" // Clear the text.
         return updatedCellsList
       }) // Why doesn't this force a re-render?
       setGridState({ ...gridState }) // Force a re-render. Why is this needed?
@@ -184,6 +186,7 @@ export default function Grid(props: { gridLength?: number }) {
         columnIndex={cell.columnIndex}
         sizePercent={cell.sizePercent}
         blocked={cell.blocked}
+        displayText={cell.displayText}
       />
     ))
   })

@@ -27,7 +27,9 @@ export default function Crossword() {
         tabIndex={-1}
       >
         <Grid />
-        Navigate w/arrow keys. Press "." to place/remove a block.
+        Navigate w/arrow keys. Press "." to place/remove a block. Type a letter
+        (A-Z) on a selected cell to enter it in. Press backspace to delete a
+        letter.
         <br />
         Grid size will be adjustable here.
         <div>
