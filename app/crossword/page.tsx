@@ -27,6 +27,8 @@ export default function Crossword() {
         tabIndex={-1}
       >
         <Grid />
+        Navigate w/arrow keys. Press "." to place/remove a block.
+        <br />
         Grid size will be adjustable here.
         <div>
           <button
