@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 
-interface CellProps {
+export interface CellProps {
   selected: boolean
   rowIndex: number
   columnIndex: number

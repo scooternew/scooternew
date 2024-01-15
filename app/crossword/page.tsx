@@ -1,15 +1,19 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import Grid from "./Grid"
 
 export default function Crossword() {
   console.log("Creating crossword window...")
 
-  const handleLoginButtonClick = (event: React.MouseEvent) => {
-    console.log("Page level - login button clicked")
-    console.log(event)
+  const handleLoginButtonClick = (event: React.MouseEvent) => {}
+
+  const [gridLength, setGridLength] = useState(12)
+
+  const handleUpdateGridLength = (e: React.FormEvent<HTMLInputElement>) => {
+    console.log(e)
   }
+
   return (
     <React.StrictMode>
       <div

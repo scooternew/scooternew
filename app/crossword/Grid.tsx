@@ -8,7 +8,7 @@ import React, {
   useContext,
   useMemo,
 } from "react"
-import Cell from "./Cell"
+import Cell, { CellProps } from "./Cell"
 
 import { ReactNode, useState, useEffect } from "react"
 
@@ -25,10 +25,28 @@ export interface GridProps {
 }
 
 const defaultGridState: GridProps = {
-  gridLength: 5,
-  gridSizePx: 400,
+  gridLength: 12,
+  gridSizePx: 500,
   selectedCell: { row: 0, col: 0 },
   direction: Direction.Horizontal,
+}
+
+const buildCells = (gridState: GridProps): Array<Array<CellProps>> => {
+  const percent = 100 / gridState.gridLength + "%"
+  return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
+    return colIndex
+  }).map((colIndex) => {
+    return Array.from({ length: gridState.gridLength }, (_, rowIndex) => {
+      return {
+        selected:
+          gridState.selectedCell.row == rowIndex &&
+          gridState.selectedCell.col == colIndex,
+        rowIndex: rowIndex,
+        columnIndex: colIndex,
+        sizePercent: percent,
+      }
+    })
+  })
 }
 
 // Returns a 2D array of size length x length. Each element
@@ -55,9 +73,29 @@ const buildGridElements = (gridState: GridProps) => {
   })
 }
 
-export default function Grid() {
+export default function Grid(props: { gridLength?: number }) {
   // TODO(scooternew): useContext for global state. How does this work?
-  const [gridState, setGridState] = useState(defaultGridState)
+  const [cells, setCells] = useState(buildCells(defaultGridState))
+
+  const [gridState, setGridState] = useState(
+    props.gridLength
+      ? { ...defaultGridState, gridLength: props.gridLength } // Set grid length is passed from props
+      : defaultGridState
+    // { ...defaultGridState, cellList: cells }
+  )
+  // const [cells, setCells] = useState(buildCells(gridState))
+
+  // const displayCells = gridState.cellList.map((row) => {
+  //   return row.map((cell) => (
+  //     <Cell
+  //       key={"cell-" + cell.rowIndex + "-" + cell.columnIndex}
+  //       selected={cell.selected}
+  //       rowIndex={cell.rowIndex}
+  //       columnIndex={cell.columnIndex}
+  //       sizePercent={cell.sizePercent}
+  //     />
+  //   ))
+  // })
 
   // useCallback on this for memoization?
   const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -135,7 +173,10 @@ export default function Grid() {
       }}
       tabIndex={-1}
     >
-      {...buildGridElements(gridState)}
+      {
+        // ...displayCells
+        ...buildGridElements(gridState)
+      }
     </div>
   )
 }
