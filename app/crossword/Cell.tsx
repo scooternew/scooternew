@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { GlobalGridContext } from "./GlobalGridContext"
+// import { GlobalGridContext } from "./GlobalGridContext"
 
 interface CellProps {
   selected: boolean
