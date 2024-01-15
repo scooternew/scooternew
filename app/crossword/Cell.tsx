@@ -5,15 +5,16 @@ export interface CellProps {
   rowIndex: number
   columnIndex: number
   sizePercent: string
+  blocked: boolean
 }
 
 // TODO(scooternew): Set default props.
 export default function Cell(props: CellProps) {
-  const [isBlock, setIsBlock] = useState(false)
-  const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
-    console.log(e)
-    if (e.key == "." && props.selected) {
-      setIsBlock(!isBlock)
+  const createBackgroundColor = () => {
+    if (props.selected) {
+      return props.blocked ? "darkblue" : "blue"
+    } else {
+      return props.blocked ? "black" : "white"
     }
   }
 
@@ -30,11 +31,7 @@ export default function Cell(props: CellProps) {
         margin: 0,
         overflow: "hidden",
         containerType: "size",
-        backgroundColor: isBlock
-          ? "darkgray"
-          : props.selected
-          ? "blue"
-          : "white",
+        backgroundColor: createBackgroundColor(),
         color: "darkGray",
         fontSize: "0.7em",
       }}

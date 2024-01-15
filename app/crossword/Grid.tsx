@@ -31,7 +31,9 @@ const defaultGridState: GridProps = {
   direction: Direction.Horizontal,
 }
 
-const buildCells = (gridState: GridProps): Array<Array<CellProps>> => {
+const buildInitialCellsList = (
+  gridState: GridProps
+): Array<Array<CellProps>> => {
   const percent = 100 / gridState.gridLength + "%"
   return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
     return colIndex
@@ -44,6 +46,7 @@ const buildCells = (gridState: GridProps): Array<Array<CellProps>> => {
         rowIndex: rowIndex,
         columnIndex: colIndex,
         sizePercent: percent,
+        blocked: false,
       }
     })
   })
@@ -51,113 +54,139 @@ const buildCells = (gridState: GridProps): Array<Array<CellProps>> => {
 
 // Returns a 2D array of size length x length. Each element
 // contains an object with the corresponding row and column index.
-const buildGridElements = (gridState: GridProps) => {
-  const percent = 100 / gridState.gridLength + "%"
-  return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
-    return colIndex
-  }).map((colIndex) => {
-    return Array.from({ length: gridState.gridLength }, (_, rowIndex) => {
-      return (
-        <Cell
-          key={"cell-" + rowIndex + "-" + colIndex}
-          selected={
-            gridState.selectedCell.row == rowIndex &&
-            gridState.selectedCell.col == colIndex
-          }
-          rowIndex={rowIndex}
-          columnIndex={colIndex}
-          sizePercent={percent}
-        />
-      )
-    })
-  })
-}
+// const buildGridElements = (gridState: GridProps) => {
+//   const percent = 100 / gridState.gridLength + "%"
+//   return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
+//     return colIndex
+//   }).map((colIndex) => {
+//     return Array.from({ length: gridState.gridLength }, (_, rowIndex) => {
+//       return (
+//         <Cell
+//           key={"cell-" + rowIndex + "-" + colIndex}
+//           selected={
+//             gridState.selectedCell.row == rowIndex &&
+//             gridState.selectedCell.col == colIndex
+//           }
+//           rowIndex={rowIndex}
+//           columnIndex={colIndex}
+//           sizePercent={percent}
+//         />
+//       )
+//     })
+//   })
+// }
 
 export default function Grid(props: { gridLength?: number }) {
-  // TODO(scooternew): useContext for global state. How does this work?
-  const [cells, setCells] = useState(buildCells(defaultGridState))
-
   const [gridState, setGridState] = useState(
     props.gridLength
-      ? { ...defaultGridState, gridLength: props.gridLength } // Set grid length is passed from props
+      ? { ...defaultGridState, gridLength: props.gridLength }
       : defaultGridState
-    // { ...defaultGridState, cellList: cells }
   )
-  // const [cells, setCells] = useState(buildCells(gridState))
 
-  // const displayCells = gridState.cellList.map((row) => {
-  //   return row.map((cell) => (
-  //     <Cell
-  //       key={"cell-" + cell.rowIndex + "-" + cell.columnIndex}
-  //       selected={cell.selected}
-  //       rowIndex={cell.rowIndex}
-  //       columnIndex={cell.columnIndex}
-  //       sizePercent={cell.sizePercent}
-  //     />
-  //   ))
-  // })
+  const [cellsList, setCellsList] = useState(buildInitialCellsList(gridState))
 
-  // useCallback on this for memoization?
   const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    const oldPosition = gridState.selectedCell
     if (e.key == "ArrowUp") {
-      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      const newPosition = {
+        row: gridState.selectedCell.row,
+        col:
+          gridState.selectedCell.col == 0
+            ? gridState.gridLength - 1
+            : gridState.selectedCell.col - 1,
+      }
       setGridState({
         ...gridState,
         direction: Direction.Vertical,
-        selectedCell: {
-          row: gridState.selectedCell.row,
-          col:
-            gridState.selectedCell.col == 0
-              ? gridState.gridLength - 1
-              : gridState.selectedCell.col - 1,
-        },
+        selectedCell: newPosition,
+      })
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].selected = false
+        updatedCellsList[newPosition.col][newPosition.row].selected = true
+        return updatedCellsList
       })
     }
     if (e.key == "ArrowRight") {
-      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      const newPosition = {
+        row:
+          gridState.selectedCell.row == gridState.gridLength - 1
+            ? 0
+            : gridState.selectedCell.row + 1,
+        col: gridState.selectedCell.col,
+      }
       setGridState({
         ...gridState,
         direction: Direction.Horizontal,
-        selectedCell: {
-          row:
-            gridState.selectedCell.row == gridState.gridLength - 1
-              ? 0
-              : gridState.selectedCell.row + 1,
-          col: gridState.selectedCell.col,
-        },
+        selectedCell: newPosition,
+      })
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].selected = false
+        updatedCellsList[newPosition.col][newPosition.row].selected = true
+        return updatedCellsList
       })
     }
     if (e.key == "ArrowLeft") {
-      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      const newPosition = {
+        row:
+          gridState.selectedCell.row == 0
+            ? gridState.gridLength - 1
+            : gridState.selectedCell.row - 1,
+        col: gridState.selectedCell.col,
+      }
       setGridState({
         ...gridState,
         direction: Direction.Horizontal,
-        selectedCell: {
-          row:
-            gridState.selectedCell.row == 0
-              ? gridState.gridLength - 1
-              : gridState.selectedCell.row - 1,
-          col: gridState.selectedCell.col,
-        },
+        selectedCell: newPosition,
+      })
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].selected = false
+        updatedCellsList[newPosition.col][newPosition.row].selected = true
+        return updatedCellsList
       })
     }
     if (e.key == "ArrowDown") {
-      // TODO(scooternew): Spread operator here creates a new object, updating state.
+      const newPosition = {
+        row: gridState.selectedCell.row,
+        col:
+          gridState.selectedCell.col == gridState.gridLength - 1
+            ? 0
+            : gridState.selectedCell.col + 1,
+      }
       setGridState({
         ...gridState,
         direction: Direction.Vertical,
-        selectedCell: {
-          row: gridState.selectedCell.row,
-          col:
-            gridState.selectedCell.col == gridState.gridLength - 1
-              ? 0
-              : gridState.selectedCell.col + 1,
-        },
+        selectedCell: newPosition,
+      })
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].selected = false
+        updatedCellsList[newPosition.col][newPosition.row].selected = true
+        return updatedCellsList
       })
     }
+    if (e.key == ".") {
+      const oldBlocked = cellsList[oldPosition.col][oldPosition.row].blocked
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].blocked = !oldBlocked
+        return updatedCellsList
+      }) // Why doesn't this force a re-render?
+      setGridState({ ...gridState }) // Force a re-render. Why is this needed?
+    }
+
+    e.preventDefault()
   }
 
-  console.log("Grid state: " + JSON.stringify(gridState))
+  const displayCells = cellsList.map((row) => {
+    return row.map((cell) => (
+      <Cell
+        key={"cell-" + cell.rowIndex + "-" + cell.columnIndex}
+        selected={cell.selected}
+        rowIndex={cell.rowIndex}
+        columnIndex={cell.columnIndex}
+        sizePercent={cell.sizePercent}
+        blocked={cell.blocked}
+      />
+    ))
+  })
 
   return (
     <div
@@ -173,10 +202,7 @@ export default function Grid(props: { gridLength?: number }) {
       }}
       tabIndex={-1}
     >
-      {
-        // ...displayCells
-        ...buildGridElements(gridState)
-      }
+      {...displayCells}
     </div>
   )
 }
