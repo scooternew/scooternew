@@ -1,161 +1,100 @@
 "use client"
 
-import React, { ReactComponentElement } from "react"
+import React, {
+  KeyboardEventHandler,
+  ReactComponentElement,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react"
 import Cell from "./Cell"
 
 import { ReactNode, useState, useEffect } from "react"
+import { GlobalGridContext, GlobalGridProps } from "./GlobalGridContext"
 
 enum Direction {
   Horizontal,
   Vertical,
 }
 
-export interface GridProps {
-  width: number
-  height: number
-  // cells: string[]
+interface GridProps {
+  readonly gridLength: number
+  readonly gridSizePx: number
+  selectedCell: { row: number; col: number }
 }
 
-const updateCellAt = (grid: Array<any>, index: number, newCell: any) => {
-  return [
-    // Items before the insertion point:
-    ...grid.slice(0, index),
-    // New item:
-    newCell,
-    // Items after the insertion point:
-    ...grid.slice(index),
-  ]
+const defaultGridState: GridProps = {
+  gridLength: 10,
+  gridSizePx: 500,
+  selectedCell: { row: 0, col: 0 },
 }
 
-const convertToIndex = (position: Array<number>, gridSize: number): number => {
-  console.log("Position: " + position)
-  const index = position[0] + position[1] * gridSize
-  console.log("convertToIndex: " + index)
-  return index
+// Returns a 2D array of size length x length. Each element
+// contains an object with the corresponding row and column index.
+const buildGridElements = (gridState: GridProps) => {
+  const percent = 100 / gridState.gridLength + "%"
+  return Array.from({ length: gridState.gridLength }, (_, colIndex) => {
+    return colIndex
+  }).map((colIndex) => {
+    return Array.from({ length: gridState.gridLength }, (_, rowIndex) => {
+      return (
+        <Cell
+          key={"cell-" + rowIndex + "-" + colIndex}
+          selected={
+            gridState.selectedCell.row == rowIndex &&
+            gridState.selectedCell.col == colIndex
+          }
+          rowIndex={rowIndex}
+          columnIndex={colIndex}
+          sizePercent={percent}
+        />
+      )
+    })
+  })
 }
 
 export default function Grid() {
   // TODO(scooternew): Document grid constraints.
-  const gridSize = 12
-  const gridSizePx = 500
-  const gridWidthPercent = 100 / gridSize + "%"
-  const paddingBottomPercent = 100 / gridSize + "%"
+  const [gridState, setGridState] = useState(defaultGridState)
 
-  // TODO(scooternew): Externalize as global or top-level constants.
-  const [cursorPosition, setCursorPosition] = useState([0, 0])
-  const [direction, setDirection] = useState(Direction.Horizontal)
-  const [blockList, setBlockList] = useState(0)
-  // TODO(scooternew): Model as map or 2d array.
-
-  const cellsList = []
-
-  // TODO(scooternew): Support default props.
-  for (var i = 0; i < gridSize * gridSize; i++) {
-    const curX = i % gridSize
-    const curY = Math.floor(i / gridSize)
-    let curSelected = curX == cursorPosition[0] && curY == cursorPosition[1]
-
-    cellsList.push(
-      <Cell
-        {...{
-          selected: curSelected,
-          widthPercent: gridWidthPercent,
-          paddingBottomPercent: paddingBottomPercent,
-          rowIndex: curX,
-          columnIndex: curY,
-        }}
-        key={"cell" + i}
-      />
-    )
-  }
-
-  const [grid, setGrid] = useState(cellsList)
-
-  // TODO(scooternew): Forward ref?
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown)
-
-    // clean up
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [])
-
-  // TODO(scooternew): Move into separate functions.
-  const handleKeyDown = (event: any) => {
-    console.log(event)
-    const cellIndexX = cursorPosition[0]
-    const cellIndexY = cursorPosition[1]
-    if (event.key === "ArrowLeft") {
-      console.log("Left arrow was pressed")
-      setCursorPosition((cell) => [
-        cell[0] == 0 ? gridSize - 1 : cell[0] - 1,
-        cell[1],
-      ])
-      setDirection(Direction.Horizontal)
-    }
-    if (event.key === "ArrowRight") {
-      console.log("Right arrow was pressed")
-      setCursorPosition((cell) => [
-        cell[0] == gridSize - 1 ? 0 : cell[0] + 1,
-        cell[1],
-      ])
-      setDirection(Direction.Horizontal)
-    }
-    if (event.key === "ArrowDown") {
-      console.log("Up arrow was pressed")
-      setCursorPosition((cell) => [
-        cell[0],
-        cell[1] == gridSize - 1 ? 0 : cell[1] + 1,
-      ])
-      setDirection(Direction.Vertical)
-    }
-    if (event.key === "ArrowUp") {
-      console.log("Down arrow was pressed")
-      setCursorPosition((cell) => [
-        cell[0],
-        cell[1] == 0 ? gridSize - 1 : cell[1] - 1,
-      ])
-      setDirection(Direction.Vertical)
-    }
-    if (event.key === ".") {
-      console.log("Period key was pressed")
-      // const map = { test: "Hello!"
-      const index = convertToIndex(cursorPosition, gridSize)
-      console.log("Flat index: " + index)
-      const component = grid[index] // vs const?
-      console.log(component)
-
-      setGrid((oldGrid) => updateCellAt(oldGrid, index, <div>HAHA</div>))
+  const handleEvent = (e: React.KeyboardEvent<HTMLElement>) => {
+    console.log(e)
+    if ((e.key = "up")) {
+      setGridState((oldGridState) => {
+        let newGridState = oldGridState
+        newGridState.selectedCell = {
+          row: oldGridState.selectedCell.row,
+          col:
+            oldGridState.selectedCell.col == 0
+              ? gridState.gridLength - 1
+              : gridState.selectedCell.col - 1,
+        }
+        return newGridState
+      })
     }
   }
 
-  console.log(
-    "Selected cell: [" + cursorPosition[0] + ", " + cursorPosition[1] + "]"
-  )
+  const handleEventCallback = useCallback(handleEvent, [gridState])
 
-  // console.log("CellsList: " + cellsList)
-  // console.log("Grid: " + grid)
-  console.log("Blocklist: " + blockList)
+  console.log("Grid state: " + JSON.stringify(gridState))
 
-  // TODO(scooternew): Handle events at top-level and propagate downward.
-  // TODO(scooternew): Debounce events.
   return (
-    <React.StrictMode>
-      <div
-        className="grid"
-        onKeyDown={handleKeyDown}
-        style={{
-          display: "table-cell", // TODO(scooternew): should be "block" or "inline-block"
-          border: "5px solid black",
-          width: gridSizePx,
-          height: gridSizePx,
-          backgroundColor: "gray",
-        }}
-        tabIndex={-1} // Ensures this can respond to key events.
-      >
-        {...cellsList}
-      </div>
-    </React.StrictMode>
+    // <gridContext.Provider value={gridState}>
+    <div
+      onKeyDown={handleEventCallback}
+      className="grid"
+      style={{
+        display: "table-cell",
+        border: "5px solid black",
+        width: gridState.gridSizePx,
+        height: gridState.gridSizePx,
+        backgroundColor: "gray",
+      }}
+      tabIndex={-1}
+    >
+      {...buildGridElements(gridState)}
+    </div>
+    // </gridContext.Provider>
   )
 }

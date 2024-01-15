@@ -2,6 +2,7 @@
 
 import React from "react"
 import Grid from "./Grid"
+import { GlobalGridContext, defaultGlobalGridProps } from "./GlobalGridContext"
 
 export default function Crossword() {
   console.log("Creating crossword window...")
