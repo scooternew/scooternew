@@ -24,7 +24,7 @@ export interface GridProps {
   direction: Direction
 }
 
-const defaultGridState: GridProps = {
+export const defaultGridState: GridProps = {
   gridLength: 12,
   gridSizePx: 500,
   selectedCell: { row: 0, col: 0 },
