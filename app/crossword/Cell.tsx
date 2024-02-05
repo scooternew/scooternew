@@ -6,6 +6,7 @@ export interface CellProps {
   columnIndex: number
   sizePercent: string
   blocked: boolean
+  highlighted: boolean
   displayText: string
 }
 
@@ -13,8 +14,14 @@ export interface CellProps {
 export default function Cell(props: CellProps) {
   const createBackgroundColor = () => {
     if (props.selected) {
+      if (props.highlighted) {
+        return "gold"
+      }
       return props.blocked ? "darkblue" : "blue"
     } else {
+      if (props.highlighted) {
+        return "palegoldenrod"
+      }
       return props.blocked ? "black" : "white"
     }
   }
@@ -37,20 +44,25 @@ export default function Cell(props: CellProps) {
         fontSize: "0.7em",
       }}
     >
-      <div className="internalCellText">
-        [{props.rowIndex}, {props.columnIndex}]
-        <br />
-        <span
-          style={{
-            display: "block",
-            textAlign: "center",
-            fontWeight: "bolder",
-            fontSize: "1.5em",
-            color: "#BBBBBB",
-          }}
-        >
-          {props.displayText}
-        </span>
+      <div
+        className="highlight"
+        // style={{ display: "flex", background: "green" }} // TODO(scooternew): Fix this.
+      >
+        <div className="internalCellText">
+          [{props.rowIndex}, {props.columnIndex}]
+          <br />
+          <span
+            style={{
+              display: "flex",
+              textAlign: "center",
+              fontWeight: "bolder",
+              fontSize: "1.5em",
+              color: "#BBBBBB",
+            }}
+          >
+            {props.displayText}
+          </span>
+        </div>
       </div>
     </div>
   )

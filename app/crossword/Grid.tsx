@@ -48,6 +48,7 @@ const buildInitialCellsList = (
         sizePercent: percent,
         blocked: false,
         displayText: "",
+        highlighted: false,
       }
     })
   })
@@ -173,6 +174,16 @@ export default function Grid(props: { gridLength?: number }) {
       }) // Why doesn't this force a re-render?
       setGridState({ ...gridState }) // Force a re-render. Why is this needed?
     }
+    if (e.key == " ") {
+      const oldHighlighted =
+        cellsList[oldPosition.col][oldPosition.row].highlighted
+      setCellsList((updatedCellsList) => {
+        updatedCellsList[oldPosition.col][oldPosition.row].highlighted =
+          !oldHighlighted
+        return updatedCellsList
+      }) // Why doesn't this force a re-render?
+      setGridState({ ...gridState }) // Force a re-render. Why is this needed?
+    }
 
     e.preventDefault()
   }
@@ -187,6 +198,7 @@ export default function Grid(props: { gridLength?: number }) {
         sizePercent={cell.sizePercent}
         blocked={cell.blocked}
         displayText={cell.displayText}
+        highlighted={cell.highlighted}
       />
     ))
   })
