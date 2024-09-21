@@ -63,6 +63,34 @@ export default function Grid(props: { gridLength?: number }) {
 
   const [cellsList, setCellsList] = useState(buildInitialCellsList(gridState))
 
+  /**
+   * Compute highlighted cells given direction.
+   * @param gridState
+   * @param cellsList
+   * @returns
+   */
+  const computeHighlightedCells = (
+    gridState: GridProps,
+    cellsList: CellProps[][]
+  ): Array<{ row: number; col: number }> => {
+    const selectedCell = gridState.selectedCell
+    const direction = gridState.direction
+    if (direction == Direction.Vertical) {
+      // const cellsRow = cellsList[1][2]
+
+      const cellsColumn = cellsList.filter(
+        (val, index) => index == selectedCell.row
+      )
+
+      console.log("Cells column")
+      console.log(cellsColumn)
+
+      console.log("Cells row")
+      // console.log(cellsRow)
+    }
+    return []
+  }
+
   const handleKeyEvent = (e: React.KeyboardEvent<HTMLElement>) => {
     console.log(e)
 
@@ -183,6 +211,9 @@ export default function Grid(props: { gridLength?: number }) {
         return updatedCellsList
       }) // Why doesn't this force a re-render?
       setGridState({ ...gridState }) // Force a re-render. Why is this needed?
+    }
+    if (e.key == "Enter") {
+      computeHighlightedCells(gridState, cellsList)
     }
 
     e.preventDefault()
