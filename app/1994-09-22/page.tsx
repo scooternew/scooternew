@@ -10,7 +10,7 @@ export default function Home() {
         <br />
         Color gives the order
         <br />
-        In frequencies confined
+        In Frequencies confined
         <br />
         <br />
         Titles give the pieces
