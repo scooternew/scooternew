@@ -17,7 +17,7 @@ export default function Home() {
         <br />
         From Categories bound
         <br />
-        Four Words taken the first
+        Four Words taken first
         <br />
         And a present will be found
       </i>
